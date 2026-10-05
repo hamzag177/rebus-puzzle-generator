@@ -6,12 +6,14 @@
       {
         "segment": "UNDER",
         "type": "concept",
-        "image_prompt": "an arrow pointing straight down, under a line"
+        "image_prompt": "an arrow pointing straight down, under a line",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/an_arrow_pointing_straight_down_under_a_line.jpg"
       },
       {
         "segment": "STAND",
         "type": "concept",
-        "image_prompt": "a person standing upright"
+        "image_prompt": "a person standing upright",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_person_standing_upright.jpg"
       }
     ]
   },
@@ -22,12 +24,14 @@
       {
         "segment": "BEE",
         "type": "concept",
-        "image_prompt": "a honeybee"
+        "image_prompt": "a honeybee",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_honeybee.jpg"
       },
       {
         "segment": "LEAF",
         "type": "concept",
-        "image_prompt": "a single green leaf"
+        "image_prompt": "a single green leaf",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_single_green_leaf.jpg"
       }
     ]
   },
@@ -38,12 +42,14 @@
       {
         "segment": "EYE",
         "type": "concept",
-        "image_prompt": "a close-up of a human eye"
+        "image_prompt": "a close-up of a human eye",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_close_up_of_a_human_eye.jpg"
       },
       {
         "segment": "SCREAM",
         "type": "concept",
-        "image_prompt": "a person screaming, mouth wide open"
+        "image_prompt": "a person screaming, mouth wide open",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_person_screaming_mouth_wide_open.jpg"
       }
     ]
   },
@@ -54,12 +60,14 @@
       {
         "segment": "FOUR",
         "type": "text",
-        "image_prompt": null
+        "image_prompt": null,
+        "image_path": null
       },
       {
         "segment": "GIVE",
         "type": "concept",
-        "image_prompt": "two hands passing a gift box"
+        "image_prompt": "two hands passing a gift box",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/two_hands_passing_a_gift_box.jpg"
       }
     ]
   },
@@ -70,12 +78,14 @@
       {
         "segment": "BEE",
         "type": "concept",
-        "image_prompt": "a honeybee"
+        "image_prompt": "a honeybee",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_honeybee.jpg"
       },
       {
         "segment": "FOUR",
         "type": "text",
-        "image_prompt": null
+        "image_prompt": null,
+        "image_path": null
       }
     ]
   },
@@ -86,12 +96,14 @@
       {
         "segment": "SUN",
         "type": "concept",
-        "image_prompt": "a bright cartoon sun"
+        "image_prompt": "a bright cartoon sun",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_bright_cartoon_sun.jpg"
       },
       {
         "segment": "FLOWER",
         "type": "concept",
-        "image_prompt": "a single blooming flower"
+        "image_prompt": "a single blooming flower",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_single_blooming_flower.jpg"
       }
     ]
   },
@@ -102,12 +114,14 @@
       {
         "segment": "DOWN",
         "type": "concept",
-        "image_prompt": "an arrow pointing down"
+        "image_prompt": "an arrow pointing down",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/an_arrow_pointing_down.jpg"
       },
       {
         "segment": "LOAD",
         "type": "concept",
-        "image_prompt": "a cardboard box being carried"
+        "image_prompt": "a cardboard box being carried",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_cardboard_box_being_carried.jpg"
       }
     ]
   },
@@ -118,12 +132,14 @@
       {
         "segment": "OUT",
         "type": "text",
-        "image_prompt": null
+        "image_prompt": null,
+        "image_path": null
       },
       {
         "segment": "LAW",
         "type": "concept",
-        "image_prompt": "a courtroom gavel"
+        "image_prompt": "a courtroom gavel",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_courtroom_gavel.jpg"
       }
     ]
   }
