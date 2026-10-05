@@ -1,0 +1,130 @@
+[
+  {
+    "phrase": "understand",
+    "answer": "understand",
+    "clues": [
+      {
+        "segment": "UNDER",
+        "type": "concept",
+        "image_prompt": "an arrow pointing straight down, under a line"
+      },
+      {
+        "segment": "STAND",
+        "type": "concept",
+        "image_prompt": "a person standing upright"
+      }
+    ]
+  },
+  {
+    "phrase": "believe",
+    "answer": "believe",
+    "clues": [
+      {
+        "segment": "BEE",
+        "type": "concept",
+        "image_prompt": "a honeybee"
+      },
+      {
+        "segment": "LEAF",
+        "type": "concept",
+        "image_prompt": "a single green leaf"
+      }
+    ]
+  },
+  {
+    "phrase": "ice cream",
+    "answer": "ice cream",
+    "clues": [
+      {
+        "segment": "EYE",
+        "type": "concept",
+        "image_prompt": "a close-up of a human eye"
+      },
+      {
+        "segment": "SCREAM",
+        "type": "concept",
+        "image_prompt": "a person screaming, mouth wide open"
+      }
+    ]
+  },
+  {
+    "phrase": "forgive",
+    "answer": "forgive",
+    "clues": [
+      {
+        "segment": "FOUR",
+        "type": "text",
+        "image_prompt": null
+      },
+      {
+        "segment": "GIVE",
+        "type": "concept",
+        "image_prompt": "two hands passing a gift box"
+      }
+    ]
+  },
+  {
+    "phrase": "before",
+    "answer": "before",
+    "clues": [
+      {
+        "segment": "BEE",
+        "type": "concept",
+        "image_prompt": "a honeybee"
+      },
+      {
+        "segment": "FOUR",
+        "type": "text",
+        "image_prompt": null
+      }
+    ]
+  },
+  {
+    "phrase": "sunflower",
+    "answer": "sunflower",
+    "clues": [
+      {
+        "segment": "SUN",
+        "type": "concept",
+        "image_prompt": "a bright cartoon sun"
+      },
+      {
+        "segment": "FLOWER",
+        "type": "concept",
+        "image_prompt": "a single blooming flower"
+      }
+    ]
+  },
+  {
+    "phrase": "download",
+    "answer": "download",
+    "clues": [
+      {
+        "segment": "DOWN",
+        "type": "concept",
+        "image_prompt": "an arrow pointing down"
+      },
+      {
+        "segment": "LOAD",
+        "type": "concept",
+        "image_prompt": "a cardboard box being carried"
+      }
+    ]
+  },
+  {
+    "phrase": "outlaw",
+    "answer": "outlaw",
+    "clues": [
+      {
+        "segment": "OUT",
+        "type": "text",
+        "image_prompt": null
+      },
+      {
+        "segment": "LAW",
+        "type": "concept",
+        "image_prompt": "a courtroom gavel"
+      }
+    ]
+  }
+]
