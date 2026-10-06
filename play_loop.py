@@ -1,10 +1,11 @@
 
-# the actual play loop -- show a puzzle's clues, take guesses,
 # retry on a wrong answer, reveal the answer if the player gives up or runs
 # out of tries, then move on to the next puzzle.
+# generate -> store -> play -> check flow works end to end on the backend
 
 
 import answer_store
+import hints
 
 MAX_TRIES = 3
 
@@ -23,12 +24,18 @@ def show_clues(puzzle):
 
 def play_puzzle(puzzle):
     show_clues(puzzle)
+    hint_count = 0
 
     for attempt in range(1, MAX_TRIES + 1):
-        guess = input(f"Your guess (try {attempt}/{MAX_TRIES}, or type 'skip'): ").strip()
+        guess = input(f"Your guess (try {attempt}/{MAX_TRIES}, or type 'skip' or 'hint'): ").strip()
 
         if guess.lower() == "skip":
             break
+
+        if guess.lower() == "hint":
+            hint_count += 1
+            print(f"Hint: {hints.give_hint(puzzle['answer'], hint_count)}\n")
+            continue
 
         if answer_store.check_answer(guess, puzzle):
             print("Correct! 🎉\n")
