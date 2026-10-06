@@ -3,11 +3,11 @@
 # out of tries, then move on to the next puzzle.
 # generate -> store -> play -> check flow works end to end on the backend
 
-
 import answer_store
 import hints
 
 MAX_TRIES = 3
+MAX_HINTS = 2
 
 
 def show_clues(puzzle):
@@ -25,14 +25,18 @@ def show_clues(puzzle):
 def play_puzzle(puzzle):
     show_clues(puzzle)
     hint_count = 0
+    attempt = 1
 
-    for attempt in range(1, MAX_TRIES + 1):
+    while attempt <= MAX_TRIES:
         guess = input(f"Your guess (try {attempt}/{MAX_TRIES}, or type 'skip' or 'hint'): ").strip()
 
         if guess.lower() == "skip":
             break
 
         if guess.lower() == "hint":
+            if hint_count >= MAX_HINTS:
+                print("You're all out of hints -- try a guess!\n")
+                continue
             hint_count += 1
             print(f"Hint: {hints.give_hint(puzzle['answer'], hint_count)}\n")
             continue
@@ -45,6 +49,8 @@ def play_puzzle(puzzle):
             print("Not quite -- try again.\n")
         else:
             print("Out of tries.\n")
+
+        attempt += 1
 
     print(f"The answer was: {puzzle['answer']}\n")
     return False
