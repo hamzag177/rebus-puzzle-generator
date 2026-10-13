@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>REBUS Puzzle -- Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Done!</h1>
+        <p class="score">You solved {{ correct_count }} out of {{ total }} puzzles.</p>
+        <a href="{{ url_for('restart') }}" class="restart-button">Play Again</a>
+    </div>
+</body>
+</html>

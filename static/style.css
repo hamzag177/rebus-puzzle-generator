@@ -1,0 +1,118 @@
+body {
+    font-family: -apple-system, Arial, sans-serif;
+    background: #f4f4f8;
+    margin: 0;
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 640px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+.progress {
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.clues {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.clue-image img {
+    max-width: 160px;
+    max-height: 160px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.placeholder {
+    width: 160px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+    border-radius: 8px;
+    color: #888;
+    font-size: 13px;
+    padding: 8px;
+    text-align: center;
+}
+
+.clue-text {
+    font-size: 32px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+}
+
+.message {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.guess-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.guess-form input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    flex: 1;
+    min-width: 160px;
+}
+
+.guess-form button {
+    padding: 10px 16px;
+    font-size: 15px;
+    border: none;
+    border-radius: 6px;
+    background: #4a5bd4;
+    color: white;
+    cursor: pointer;
+}
+
+.guess-form button:hover {
+    background: #3a49b0;
+}
+
+.tries {
+    margin-top: 16px;
+    color: #888;
+    font-size: 14px;
+}
+
+.score {
+    font-size: 20px;
+}
+
+.restart-button {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 20px;
+    background: #4a5bd4;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}

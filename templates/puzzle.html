@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>REBUS Puzzle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>REBUS Puzzle Generator</h1>
+        <p class="progress">Puzzle {{ puzzle_number }} of {{ total_puzzles }}</p>
+
+        <div class="clues">
+            {% for clue in puzzle.clues %}
+                {% if clue.type == "concept" %}
+                    <div class="clue-image">
+                        {% if clue.image_path %}
+                            <img src="/images/{{ clue.image_path.split('/')[-1].split('\\')[-1] }}" alt="{{ clue.image_prompt }}">
+                        {% else %}
+                            <div class="placeholder">[image: {{ clue.image_prompt }}]</div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="clue-text">{{ clue.segment }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% if message %}
+            <p class="message">{{ message }}</p>
+        {% endif %}
+
+        <form method="post" action="{{ url_for('guess') }}" class="guess-form">
+            <input type="text" name="guess" placeholder="Type your guess..." autofocus>
+            <button type="submit" name="action" value="guess">Guess</button>
+            <button type="submit" name="action" value="hint">
+                Hint ({{ hint_count }}/{{ max_hints }} used)
+            </button>
+            <button type="submit" name="action" value="skip">Skip</button>
+        </form>
+
+        <p class="tries">Try {{ attempt }} of {{ max_tries }}</p>
+    </div>
+</body>
+</html>
