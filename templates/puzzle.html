@@ -31,7 +31,7 @@
         {% endif %}
 
         <form method="post" action="{{ url_for('guess') }}" class="guess-form">
-            <input type="text" name="guess" placeholder="Type your guess..." autofocus>
+            <input type="text" name="guess" placeholder="Type your guess..." autofocus autocomplete="off">
             <button type="submit" name="action" value="guess">Guess</button>
             <button type="submit" name="action" value="hint">
                 Hint ({{ hint_count }}/{{ max_hints }} used)

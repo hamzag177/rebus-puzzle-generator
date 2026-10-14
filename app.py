@@ -1,17 +1,16 @@
 # the real web interface, replacing the terminal play loop.
 # Runs with Flask
 
-
-
 import os
 
 from flask import Flask, redirect, render_template, request, send_from_directory, session, url_for
 
 import answer_store
 import hints
+import score_summary
 
 app = Flask(__name__)
-app.secret_key = "dev-secret-key-change-later"  # fine for a class project, not for production
+app.secret_key = os.urandom(24)  # new random key every time the server starts, so old sessions reset automatically
 
 IMAGES_DIR = os.path.join(os.path.dirname(__file__), "images")
 
@@ -50,6 +49,7 @@ def index():
         return redirect(url_for("results"))
 
     puzzle = puzzles[puzzle_index]
+    message = session.pop("message", None)
 
     return render_template(
         "puzzle.html",
@@ -60,7 +60,7 @@ def index():
         max_tries=MAX_TRIES,
         hint_count=session["hint_count"],
         max_hints=MAX_HINTS,
-        message=session.get("message"),
+        message=message,
     )
 
 
@@ -112,10 +112,6 @@ def _advance_puzzle(correct):
     session["puzzle_index"] += 1
     session["attempt"] = 1
     session["hint_count"] = 0
-    if not correct:
-        # Keep whatever "out of tries" / "skipped" message is already set
-        # by the caller -- just move on to the next puzzle.
-        pass
 
 
 @app.route("/results")
@@ -123,8 +119,9 @@ def results():
     puzzles = get_puzzles()
     correct_count = session.get("correct_count", 0)
     total = len(puzzles)
+    title = score_summary.get_title(correct_count, total)
 
-    return render_template("result.html", correct_count=correct_count, total=total)
+    return render_template("result.html", correct_count=correct_count, total=total, title=title)
 
 
 @app.route("/restart")

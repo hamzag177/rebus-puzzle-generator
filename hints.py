@@ -10,7 +10,7 @@ def give_hint(answer, hint_count):
         return ""
 
     def blank(word):
-        return "_" * len(word)
+        return " ".join("_" for _ in word)
 
     words = answer.split(" ")
 
