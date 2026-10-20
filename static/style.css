@@ -116,3 +116,14 @@ h1 {
     text-decoration: none;
     border-radius: 6px;
 }
+
+/* Color-coded guess/hint messages (Kowsar's task, adapted for the web) */
+.message.error {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.message.hint {
+    color: #2e7d32;
+    font-weight: bold;
+}

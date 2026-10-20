@@ -9,6 +9,7 @@ import ai_clue_generator
 import answer_store
 import hints
 import image_generator
+import message_colors
 import score_summary
 
 app = Flask(__name__)
@@ -28,6 +29,7 @@ def reset_game():
     session["hint_count"] = 0
     session["correct_count"] = 0
     session["message"] = None
+    session["message_type"] = None
 
 @app.route("/images/<path:filename>")
 def serve_image(filename):
@@ -48,6 +50,7 @@ def index():
 
     puzzle = puzzles[puzzle_index]
     message = session.pop("message", None)
+    message_type = session.pop("message_type", None)
 
     return render_template(
         "puzzle.html",
@@ -59,6 +62,7 @@ def index():
         hint_count=session["hint_count"],
         max_hints=MAX_HINTS,
         message=message,
+        message_type=message_type,
     )
 
 @app.route("/guess", methods=["POST"])
@@ -76,10 +80,11 @@ def guess():
     if action == "hint":
         if session["hint_count"] >= MAX_HINTS:
             session["message"] = "You're all out of hints -- try a guess!"
+            session["message_type"] = "error"
         else:
             session["hint_count"] += 1
             hint_text = hints.give_hint(puzzle["answer"], session["hint_count"])
-            session["message"] = f"Hint: {hint_text}"
+            session["message"], session["message_type"] = message_colors.hint_message(hint_text)
         return redirect(url_for("index"))
 
     if action == "skip":
@@ -96,10 +101,14 @@ def guess():
 
     session["attempt"] += 1
     if session["attempt"] > MAX_TRIES:
-        session["message"] = f"Out of tries! The answer was: {puzzle['answer']}"
+        session["message"], session["message_type"] = message_colors.wrong_guess_message(
+            f"Out of tries! The answer was: {puzzle['answer']}"
+        )
         _advance_puzzle(correct=False)
     else:
-        session["message"] = "Not quite -- try again."
+        session["message"], session["message_type"] = message_colors.wrong_guess_message(
+            "Not quite -- try again."
+        )
 
     return redirect(url_for("index"))
 
