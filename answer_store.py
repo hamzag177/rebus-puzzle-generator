@@ -44,3 +44,13 @@ def load_puzzles():
 def check_answer(guess, puzzle):
     """Case-insensitive, whitespace-trimmed answer check."""
     return guess.strip().lower() == puzzle["answer"].strip().lower()
+
+def add_puzzle(puzzle):
+    """
+    Append one new puzzle (built by the admin page) to puzzles.json and save.
+    """
+    puzzles = load_puzzles()
+    puzzles.append(puzzle)
+    with open(PUZZLES_FILE, "w") as f:
+        json.dump(puzzles, f, indent=2)
+    return puzzles

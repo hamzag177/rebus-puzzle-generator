@@ -5,8 +5,10 @@ import os
 
 from flask import Flask, redirect, render_template, request, send_from_directory, session, url_for
 
+import ai_clue_generator
 import answer_store
 import hints
+import image_generator
 import score_summary
 
 app = Flask(__name__)
@@ -17,10 +19,8 @@ IMAGES_DIR = os.path.join(os.path.dirname(__file__), "images")
 MAX_TRIES = 3
 MAX_HINTS = 2
 
-
 def get_puzzles():
     return answer_store.load_puzzles()
-
 
 def reset_game():
     session["puzzle_index"] = 0
@@ -29,12 +29,10 @@ def reset_game():
     session["correct_count"] = 0
     session["message"] = None
 
-
 @app.route("/images/<path:filename>")
 def serve_image(filename):
     """Serve the already-generated AI images from the images/ folder."""
     return send_from_directory(IMAGES_DIR, filename)
-
 
 @app.route("/")
 def index():
@@ -62,7 +60,6 @@ def index():
         max_hints=MAX_HINTS,
         message=message,
     )
-
 
 @app.route("/guess", methods=["POST"])
 def guess():
@@ -94,7 +91,6 @@ def guess():
 
     if answer_store.check_answer(user_guess, puzzle):
         session["correct_count"] += 1
-        session["message"] = "Correct! \U0001F389"
         _advance_puzzle(correct=True)
         return redirect(url_for("index"))
 
@@ -107,12 +103,10 @@ def guess():
 
     return redirect(url_for("index"))
 
-
 def _advance_puzzle(correct):
     session["puzzle_index"] += 1
     session["attempt"] = 1
     session["hint_count"] = 0
-
 
 @app.route("/results")
 def results():
@@ -123,12 +117,46 @@ def results():
 
     return render_template("result.html", correct_count=correct_count, total=total, title=title)
 
-
 @app.route("/restart")
 def restart():
     reset_game()
     return redirect(url_for("index"))
 
+# ---------------------------------------------------------------------------
+# Admin page (Week 6) -- hidden from regular players, no login yet per the
+# instructor's note that auth "will come later". Lets us type in any new
+# word/phrase, have the AI break it into clues, generate the images for
+# the "concept" clues, and save the whole thing as a new playable puzzle --
+# without touching any code.
+# ---------------------------------------------------------------------------
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    message = None
+
+    if request.method == "POST":
+        phrase = request.form.get("phrase", "").strip()
+
+        if not phrase:
+            message = "Please type a word or phrase first."
+        else:
+            puzzle = ai_clue_generator.generate_clues_ai(phrase)
+
+            if not puzzle:
+                message = f"Couldn't generate clues for \"{phrase}\" -- try a different word or phrase."
+            else:
+                # Only generate an image the first time -- image_generator
+                # already skips the API call if the file exists on disk,
+                # so re-running this is always safe and won't waste calls.
+                for clue in puzzle["clues"]:
+                    if clue["type"] == "concept" and clue.get("image_prompt"):
+                        clue["image_path"] = image_generator.generate_image(clue["image_prompt"])
+
+                answer_store.add_puzzle(puzzle)
+                message = f"Added new puzzle for \"{phrase}\"!"
+
+    puzzles = answer_store.load_puzzles()
+    return render_template("admin.html", message=message, puzzles=puzzles)
 
 if __name__ == "__main__":
     app.run(debug=True)

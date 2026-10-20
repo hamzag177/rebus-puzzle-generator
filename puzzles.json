@@ -142,5 +142,41 @@
         "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_courtroom_gavel.jpg"
       }
     ]
+  },
+  {
+    "phrase": "cupcake",
+    "answer": "cupcake",
+    "clues": [
+      {
+        "segment": "CUP",
+        "type": "concept",
+        "image_prompt": "a simple ceramic coffee cup on a saucer",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_simple_ceramic_coffee_cup_on_a_saucer.jpg"
+      },
+      {
+        "segment": "CAKE",
+        "type": "concept",
+        "image_prompt": "a decorated layered birthday cake with colorful frosting and lit candles",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_decorated_layered_birthday_cake_with_colorful_frosting_and.jpg"
+      }
+    ]
+  },
+  {
+    "phrase": "snowman",
+    "answer": "snowman",
+    "clues": [
+      {
+        "segment": "SNOW",
+        "type": "concept",
+        "image_prompt": "Fresh white snow falling softly onto evergreen pine tree branches",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/fresh_white_snow_falling_softly_onto_evergreen_pine_tree_bra.jpg"
+      },
+      {
+        "segment": "MAN",
+        "type": "concept",
+        "image_prompt": "A friendly adult man standing and smiling in casual clothes against a plain background",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_friendly_adult_man_standing_and_smiling_in_casual_clothes_.jpg"
+      }
+    ]
   }
 ]
