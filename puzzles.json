@@ -178,5 +178,46 @@
         "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_friendly_adult_man_standing_and_smiling_in_casual_clothes_.jpg"
       }
     ]
+  },
+  {
+    "phrase": "rainbow",
+    "answer": "rainbow",
+    "clues": [
+      {
+        "segment": "RAIN",
+        "type": "concept",
+        "image_prompt": "Rain falling from a dark cloud onto a puddle on the ground",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/rain_falling_from_a_dark_cloud_onto_a_puddle_on_the_ground.jpg"
+      },
+      {
+        "segment": "BOW",
+        "type": "concept",
+        "image_prompt": "A wooden archery bow with an arrow nocked on the string",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_wooden_archery_bow_with_an_arrow_nocked_on_the_string.jpg"
+      }
+    ]
+  },
+  {
+    "phrase": "computer",
+    "answer": "computer",
+    "clues": [
+      {
+        "segment": "COMB",
+        "type": "concept",
+        "image_prompt": "a classic plastic hair comb lying flat on a white surface",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_classic_plastic_hair_comb_lying_flat_on_a_white_surface.jpg"
+      },
+      {
+        "segment": "PEW",
+        "type": "concept",
+        "image_prompt": "a traditional wooden church pew bench",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_traditional_wooden_church_pew_bench.jpg"
+      },
+      {
+        "segment": "TER",
+        "type": "text",
+        "image_prompt": null
+      }
+    ]
   }
 ]
