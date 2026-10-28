@@ -148,6 +148,8 @@ def admin():
 
         if not phrase:
             message = "Please type a word or phrase first."
+        elif any(p["answer"].strip().lower() == phrase.lower() for p in answer_store.load_puzzles()):
+            message = f"\"{phrase}\" is already a puzzle -- pick a different word or phrase."
         else:
             puzzle = ai_clue_generator.generate_clues_ai(phrase)
 
