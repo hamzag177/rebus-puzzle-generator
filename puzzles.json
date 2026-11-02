@@ -219,5 +219,23 @@
         "image_prompt": null
       }
     ]
+  },
+  {
+    "answer": "moonlight",
+    "clues": [
+      {
+        "image_prompt": "a bright glowing crescent moon in a dark night sky with stars",
+        "segment": "MOON",
+        "type": "concept",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_bright_glowing_crescent_moon_in_a_dark_night_sky_with_star.jpg"
+      },
+      {
+        "image_prompt": "a shining yellow light bulb with radiant glow lines",
+        "segment": "LIGHT",
+        "type": "concept",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_shining_yellow_light_bulb_with_radiant_glow_lines.jpg"
+      }
+    ],
+    "phrase": "moonlight"
   }
 ]

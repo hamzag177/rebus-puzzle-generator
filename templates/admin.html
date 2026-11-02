@@ -8,19 +8,66 @@
 <body>
     <div class="container">
         <h1>Admin: Add a Puzzle</h1>
-        <p class="progress">Type any word or phrase and the AI will break it into rebus clues automatically.</p>
 
         {% if message %}
             <p class="message">{{ message }}</p>
         {% endif %}
 
-        <form method="post" action="{{ url_for('admin') }}" class="guess-form" id="generate-form">
-            <input type="text" name="phrase" placeholder="e.g. birthday" autocomplete="off" autofocus>
-            <button type="submit" id="generate-btn">Generate Puzzle</button>
-        </form>
-        <p id="loading-message" style="display: none;">
-            Generating puzzle and images -- this can take up to a minute, please wait...
-        </p>
+        {% if not draft %}
+            <p class="progress">Type any word or phrase and the AI will break it into rebus clues automatically.</p>
+
+            <form method="post" action="{{ url_for('admin') }}" class="guess-form" id="generate-form">
+                <input type="hidden" name="action" value="generate_clues">
+                <input type="text" name="phrase" placeholder="e.g. birthday" autocomplete="off" autofocus>
+                <button type="submit" id="generate-btn">Generate Puzzle</button>
+            </form>
+            <p id="loading-message" style="display: none;">
+                Generating clues -- this can take up to a minute, please wait...
+            </p>
+
+        {% else %}
+            <p class="progress">
+                Review the clues for "<strong>{{ draft.phrase }}</strong>" below. You can edit any image
+                description before the pictures get generated.
+            </p>
+
+            <form method="post" action="{{ url_for('admin') }}" id="confirm-form">
+                <input type="hidden" name="action" value="confirm_puzzle">
+
+                {% for clue in draft.clues %}
+                    <div style="margin: 1.5rem 0; text-align: left;">
+                        <strong>{{ clue.segment }}</strong>
+                        ({{ clue.type }})
+
+                        {% if clue.type == "concept" %}
+                            <br>
+                            <label for="prompt_{{ loop.index0 }}">Image description:</label><br>
+                            <input
+                                type="text"
+                                id="prompt_{{ loop.index0 }}"
+                                name="prompt_{{ loop.index0 }}"
+                                value="{{ clue.image_prompt }}"
+                                style="width: 100%; max-width: 500px;"
+                            >
+                        {% else %}
+                            <br>
+                            <em>Shown as plain text -- no image.</em>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" id="confirm-btn">Generate Images &amp; Save Puzzle</button>
+            </form>
+
+            <form method="post" action="{{ url_for('admin') }}" style="margin-top: 0.5rem;">
+                <input type="hidden" name="action" value="cancel_draft">
+                <button type="submit">Cancel</button>
+            </form>
+
+            <p id="loading-message-confirm" style="display: none;">
+                Generating images -- this can take up to a minute, please wait...
+            </p>
+        {% endif %}
 
         <h2 style="margin-top: 2rem;">Existing Puzzles ({{ puzzles|length }})</h2>
         <ul style="text-align: left;">
@@ -40,14 +87,25 @@
     </div>
 
     <script>
-        // Show a loading message the instant the form is submitted, since the
-        // page won't update again until the AI + image generation finishes
-        // (can take up to a minute).
-        document.getElementById("generate-form").addEventListener("submit", function () {
-            document.getElementById("generate-btn").disabled = true;
-            document.getElementById("generate-btn").textContent = "Generating...";
-            document.getElementById("loading-message").style.display = "block";
-        });
+        // Show a loading message the instant a form is submitted, since the
+        // page won't update again until generation finishes.
+        var genForm = document.getElementById("generate-form");
+        if (genForm) {
+            genForm.addEventListener("submit", function () {
+                document.getElementById("generate-btn").disabled = true;
+                document.getElementById("generate-btn").textContent = "Generating...";
+                document.getElementById("loading-message").style.display = "block";
+            });
+        }
+
+        var confirmForm = document.getElementById("confirm-form");
+        if (confirmForm) {
+            confirmForm.addEventListener("submit", function () {
+                document.getElementById("confirm-btn").disabled = true;
+                document.getElementById("confirm-btn").textContent = "Generating...";
+                document.getElementById("loading-message-confirm").style.display = "block";
+            });
+        }
     </script>
 </body>
 </html>

@@ -142,32 +142,59 @@ def restart():
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
     message = None
+    draft = session.get("draft_puzzle")
 
     if request.method == "POST":
-        phrase = request.form.get("phrase", "").strip()
+        action = request.form.get("action")
 
-        if not phrase:
-            message = "Please type a word or phrase first."
-        elif any(p["answer"].strip().lower() == phrase.lower() for p in answer_store.load_puzzles()):
-            message = f"\"{phrase}\" is already a puzzle -- pick a different word or phrase."
-        else:
-            puzzle = ai_clue_generator.generate_clues_ai(phrase)
+        # Step 1: generate the clue breakdown + image prompts, but DON'T
+        # generate images yet -- show the prompts first so they can be
+        # reviewed/edited (per instructor feedback).
+        if action == "generate_clues":
+            phrase = request.form.get("phrase", "").strip()
 
-            if not puzzle:
-                message = f"Couldn't generate clues for \"{phrase}\" -- try a different word or phrase."
+            if not phrase:
+                message = "Please type a word or phrase first."
+            elif any(p["answer"].strip().lower() == phrase.lower() for p in answer_store.load_puzzles()):
+                message = f"\"{phrase}\" is already a puzzle -- pick a different word or phrase."
             else:
-                # Only generate an image the first time -- image_generator
-                # already skips the API call if the file exists on disk,
-                # so re-running this is always safe and won't waste calls.
-                for clue in puzzle["clues"]:
+                puzzle = ai_clue_generator.generate_clues_ai(phrase)
+
+                if not puzzle:
+                    message = f"Couldn't generate clues for \"{phrase}\" -- try a different word or phrase."
+                else:
+                    session["draft_puzzle"] = puzzle
+                    draft = puzzle
+
+        # Discard the current draft without saving anything.
+        elif action == "cancel_draft":
+            session.pop("draft_puzzle", None)
+            draft = None
+            message = "Cancelled -- draft discarded."
+
+        # Step 2: take the (possibly edited) prompts from the review form,
+        # generate the actual images, and save the puzzle.
+        elif action == "confirm_puzzle":
+            if not draft:
+                message = "No puzzle draft to confirm -- generate one first."
+            else:
+                for i, clue in enumerate(draft["clues"]):
+                    if clue["type"] == "concept":
+                        edited_prompt = request.form.get(f"prompt_{i}", "").strip()
+                        if edited_prompt:
+                            clue["image_prompt"] = edited_prompt
+
+                for clue in draft["clues"]:
                     if clue["type"] == "concept" and clue.get("image_prompt"):
                         clue["image_path"] = image_generator.generate_image(clue["image_prompt"])
 
-                answer_store.add_puzzle(puzzle)
-                message = f"Added new puzzle for \"{phrase}\"!"
+                answer_store.add_puzzle(draft)
+                message = f"Added new puzzle for \"{draft['phrase']}\"!"
+                session.pop("draft_puzzle", None)
+                draft = None
 
     puzzles = answer_store.load_puzzles()
-    return render_template("admin.html", message=message, puzzles=puzzles)
+    return render_template("admin.html", message=message, puzzles=puzzles, draft=draft)
 
 if __name__ == "__main__":
     app.run(debug=True)
