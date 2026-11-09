@@ -8,9 +8,22 @@
 <body>
     <div class="container">
         <h1>Done!</h1>
-        <p class="score">You solved {{ correct_count }} out of {{ total }} puzzles.</p>
-        <p class="title">{{ title }}</p>
-        <a href="{{ url_for('restart') }}" class="restart-button">Play Again</a>
+
+        {% if mode == "all" %}
+            <p class="score">You solved {{ correct_count }} out of {{ total }} puzzles.</p>
+            <p class="title">{{ title }}</p>
+            <a href="{{ url_for('restart') }}" class="restart-button">Back to Today's Puzzle</a>
+        {% else %}
+            {% if correct_count > 0 %}
+                <p class="score">You solved today's puzzle!</p>
+            {% else %}
+                <p class="score">Better luck tomorrow!</p>
+            {% endif %}
+            <p class="title">{{ title }}</p>
+            <p>Come back tomorrow for a brand new daily puzzle -- or keep playing now.</p>
+            <a href="{{ url_for('more_puzzles') }}" class="restart-button">Play More Puzzles</a>
+            <a href="{{ url_for('restart') }}" class="restart-button">Play Again</a>
+        {% endif %}
     </div>
 </body>
 </html>

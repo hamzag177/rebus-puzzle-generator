@@ -1,6 +1,7 @@
 # the real web interface, replacing the terminal play loop.
 # Runs with Flask
 
+import datetime
 import os
 
 from flask import Flask, redirect, render_template, request, send_from_directory, session, url_for
@@ -20,16 +21,50 @@ IMAGES_DIR = os.path.join(os.path.dirname(__file__), "images")
 MAX_TRIES = 3
 MAX_HINTS = 2
 
-def get_puzzles():
-    return answer_store.load_puzzles()
+def get_puzzle_of_the_day():
+    """
+    Pick one puzzle to feature today. Deterministic and based on the actual
+    calendar date, so every player sees the SAME puzzle on a given day, and
+    it automatically changes to a different one at midnight -- cycling back
+    around to the start once every puzzle has had a turn. No admin work
+    needed to "schedule" it.
+    """
+    all_puzzles = answer_store.load_puzzles()
+    if not all_puzzles:
+        return []
+    index = datetime.date.today().toordinal() % len(all_puzzles)
+    return [all_puzzles[index]]
 
-def reset_game():
+def get_puzzles():
+    # "all" mode (reached via "Play More Puzzles" after finishing today's
+    # puzzle) plays through every puzzle in order, like the game used to --
+    # except if the player already solved today's featured puzzle, it's
+    # temporarily left out of this set so they don't see it again right
+    # after solving it (just for this session; it's back in rotation
+    # tomorrow, or anytime a fresh session starts).
+    if session.get("mode") == "all":
+        puzzles = answer_store.load_puzzles()
+        excluded_answer = session.get("excluded_answer")
+        if excluded_answer:
+            puzzles = [
+                p for p in puzzles
+                if p["answer"].strip().lower() != excluded_answer.strip().lower()
+            ]
+        return puzzles
+    return get_puzzle_of_the_day()
+
+def reset_game(mode="daily"):
+    session["mode"] = mode
     session["puzzle_index"] = 0
     session["attempt"] = 1
     session["hint_count"] = 0
     session["correct_count"] = 0
     session["message"] = None
     session["message_type"] = None
+    if mode == "daily":
+        # Back to the daily flow -- clear any temporary exclusion from a
+        # previous "all" play-through so it doesn't leak into the next one.
+        session.pop("excluded_answer", None)
 
 @app.route("/images/<path:filename>")
 def serve_image(filename):
@@ -38,11 +73,10 @@ def serve_image(filename):
 
 @app.route("/")
 def index():
-    puzzles = get_puzzles()
-
     if "puzzle_index" not in session:
         reset_game()
 
+    puzzles = get_puzzles()
     puzzle_index = session["puzzle_index"]
 
     if puzzle_index >= len(puzzles):
@@ -55,6 +89,7 @@ def index():
     return render_template(
         "puzzle.html",
         puzzle=puzzle,
+        mode=session.get("mode", "daily"),
         puzzle_number=puzzle_index + 1,
         total_puzzles=len(puzzles),
         attempt=session["attempt"],
@@ -123,12 +158,27 @@ def results():
     correct_count = session.get("correct_count", 0)
     total = len(puzzles)
     title = score_summary.get_title(correct_count, total)
+    mode = session.get("mode", "daily")
 
-    return render_template("result.html", correct_count=correct_count, total=total, title=title)
+    return render_template("result.html", correct_count=correct_count, total=total, title=title, mode=mode)
 
 @app.route("/restart")
 def restart():
-    reset_game()
+    reset_game(mode="daily")
+    return redirect(url_for("index"))
+
+@app.route("/more")
+def more_puzzles():
+    """After finishing today's puzzle, let the player keep going and play
+    through the rest of the puzzle list at their own pace. If they actually
+    solved today's puzzle, leave it out of that list for this session so
+    they don't immediately run into the same puzzle again."""
+    if session.get("mode") == "daily" and session.get("correct_count", 0) > 0:
+        todays_puzzle = get_puzzle_of_the_day()
+        if todays_puzzle:
+            session["excluded_answer"] = todays_puzzle[0]["answer"]
+
+    reset_game(mode="all")
     return redirect(url_for("index"))
 
 # ---------------------------------------------------------------------------

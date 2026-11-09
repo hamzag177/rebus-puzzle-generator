@@ -8,7 +8,11 @@
 <body>
     <div class="container">
         <h1>REBUS Puzzle Generator</h1>
-        <p class="progress">Puzzle {{ puzzle_number }} of {{ total_puzzles }}</p>
+        {% if mode == "all" %}
+            <p class="progress">Puzzle {{ puzzle_number }} of {{ total_puzzles }}</p>
+        {% else %}
+            <p class="progress">Today's Puzzle</p>
+        {% endif %}
 
         <div class="clues">
             {% for clue in puzzle.clues %}
