@@ -72,11 +72,18 @@
         <h2 style="margin-top: 2rem;">Existing Puzzles ({{ puzzles|length }})</h2>
         <ul style="text-align: left;">
             {% for puzzle in puzzles %}
-                <li>
+                <li style="margin-bottom: 0.5rem;">
                     <strong>{{ puzzle.answer }}</strong> --
                     {% for clue in puzzle.clues %}
                         {{ clue.segment }}{% if not loop.last %} + {% endif %}
                     {% endfor %}
+
+                    <form method="post" action="{{ url_for('admin') }}" style="display: inline;"
+                          onsubmit="return confirm('Delete the puzzle \'{{ puzzle.answer }}\'? This can\'t be undone.');">
+                        <input type="hidden" name="action" value="delete_puzzle">
+                        <input type="hidden" name="answer" value="{{ puzzle.answer }}">
+                        <button type="submit" style="margin-left: 0.5rem; font-size: 0.85rem;">Delete</button>
+                    </form>
                 </li>
             {% else %}
                 <li>No puzzles yet.</li>

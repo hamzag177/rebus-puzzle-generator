@@ -198,29 +198,6 @@
     ]
   },
   {
-    "phrase": "computer",
-    "answer": "computer",
-    "clues": [
-      {
-        "segment": "COMB",
-        "type": "concept",
-        "image_prompt": "a classic plastic hair comb lying flat on a white surface",
-        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_classic_plastic_hair_comb_lying_flat_on_a_white_surface.jpg"
-      },
-      {
-        "segment": "PEW",
-        "type": "concept",
-        "image_prompt": "a traditional wooden church pew bench",
-        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_traditional_wooden_church_pew_bench.jpg"
-      },
-      {
-        "segment": "TER",
-        "type": "text",
-        "image_prompt": null
-      }
-    ]
-  },
-  {
     "answer": "moonlight",
     "clues": [
       {

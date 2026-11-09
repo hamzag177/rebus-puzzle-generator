@@ -193,6 +193,14 @@ def admin():
                 session.pop("draft_puzzle", None)
                 draft = None
 
+        # Remove an existing puzzle from the list.
+        elif action == "delete_puzzle":
+            answer_to_delete = request.form.get("answer", "")
+            if answer_store.delete_puzzle(answer_to_delete):
+                message = f"Deleted puzzle \"{answer_to_delete}\"."
+            else:
+                message = f"Couldn't find a puzzle matching \"{answer_to_delete}\" to delete."
+
     puzzles = answer_store.load_puzzles()
     return render_template("admin.html", message=message, puzzles=puzzles, draft=draft)
 
