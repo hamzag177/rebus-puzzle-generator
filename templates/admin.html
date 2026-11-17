@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>REBUS Admin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
+    {% include "_header.html" %}
+
+    <div class="container fade-in">
         <h1>Admin: Add a Puzzle</h1>
 
         {% if message %}
@@ -90,7 +93,7 @@
             {% endfor %}
         </ul>
 
-        <p style="margin-top: 2rem;"><a href="{{ url_for('index') }}">&larr; Back to the game</a></p>
+        <p style="margin-top: 2rem;"><a href="{{ url_for('home') }}">&larr; Back to the game</a></p>
     </div>
 
     <script>

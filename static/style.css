@@ -2,7 +2,139 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f2f4f8;
     text-align: center;
-    padding: 20px;
+    padding: 0 20px 20px;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Site-wide header -- branding + main menu nav, shown at the top of every page */
+.site-header {
+    background-color: #405d9b;
+    padding: 16px 20px;
+    margin: 0 -20px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.site-logo {
+    color: white;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+}
+
+.site-nav {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.site-nav a {
+    color: #dde4f7;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.15s ease;
+}
+
+.site-nav a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* "Main Menu" dropdown -- clicking it goes to the homepage, hovering it
+   reveals the Daily Puzzle / Browse Puzzles / How to Play links. */
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-menu-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+}
+
+.nav-caret {
+    font-size: 0.7rem;
+}
+
+.nav-dropdown-content {
+    display: none;
+    position: absolute;
+    /* No gap between the trigger and this box (no margin-top) -- a gap
+       would be dead space the mouse has to cross on the way down, which
+       drops the :hover state before you can reach the links. */
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    min-width: 170px;
+    overflow: hidden;
+    z-index: 20;
+}
+
+.nav-dropdown:hover .nav-dropdown-content,
+.nav-dropdown:focus-within .nav-dropdown-content {
+    display: block;
+}
+
+.nav-dropdown-content a {
+    display: block;
+    padding: 10px 16px;
+    color: #405d9b;
+    text-decoration: none;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.nav-dropdown-content a:hover {
+    background-color: #eef1f8;
+    text-decoration: none;
+}
+
+/* Touch devices can't "hover" -- just show the menu links inline instead
+   of hiding them behind a dropdown that nothing will ever open. */
+@media (hover: none) {
+    .nav-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .nav-dropdown-content {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        position: static;
+        box-shadow: none;
+        background: transparent;
+        margin-top: 0;
+        min-width: 0;
+    }
+
+    .nav-dropdown-content a {
+        color: #dde4f7;
+        padding: 0;
+        font-size: 0.95rem;
+    }
+
+    .nav-dropdown-content a:hover {
+        background: transparent;
+    }
+
+    .nav-caret {
+        display: none;
+    }
 }
 
 .container {
@@ -11,6 +143,17 @@ body {
     margin: 30px auto;
     padding: 25px;
     border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(64, 93, 155, 0.08);
+}
+
+/* Fade/slide in on every page load -- a small bit of life without needing JS */
+.fade-in {
+    animation: fadeIn 0.35s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 h1, h2 {
@@ -22,6 +165,14 @@ input, select {
     margin: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #405d9b;
+    box-shadow: 0 0 0 3px rgba(64, 93, 155, 0.15);
 }
 
 button {
@@ -31,10 +182,23 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 button:hover {
     background-color: #304878;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: default;
+    transform: none;
 }
 
 /* Puzzle-page specific layout -- the actual classes used in the templates */
@@ -46,27 +210,63 @@ button:hover {
 
 .tries {
     color: #777;
-    font-size: 0.9rem;
-    margin-top: 1rem;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
 }
 
-/* The rebus itself -- images/text segments side by side */
+/* Attempt progress indicator -- a row of dots, filled in as tries are used */
+.tries-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 1.25rem;
+}
+
+.try-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #e0e4ef;
+    transition: background-color 0.2s ease;
+}
+
+.try-dot.used {
+    background-color: #405d9b;
+}
+
+/* The rebus itself -- images/text segments side by side, each in its own card */
 .clues {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     flex-wrap: wrap;
-    gap: 12px;
-    margin: 20px 0;
+    gap: 14px;
+    margin: 22px 0;
 }
 
-.clue-image img {
-    max-height: 120px;
+.clue-card {
+    background-color: #f7f8fc;
+    border: 1px solid #e4e8f3;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clue-card img {
+    max-height: 170px;
+    max-width: 220px;
     border-radius: 8px;
+    display: block;
+}
+
+.clue-text-card {
+    padding: 12px 22px;
 }
 
 .clue-text {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: bold;
     color: #405d9b;
 }
@@ -74,43 +274,105 @@ button:hover {
 .placeholder {
     border: 2px dashed #ccc;
     border-radius: 8px;
-    padding: 20px;
+    padding: 24px;
     color: #999;
     font-size: 0.85rem;
+    min-width: 140px;
 }
 
 .guess-form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    margin-top: 1rem;
+    gap: 12px;
+    margin-top: 1.25rem;
 }
 
-.guess-form button {
-    margin: 0 4px;
+.guess-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
-/* Color-coded guess/hint messages */
+.btn-primary {
+    background-color: #405d9b;
+    color: white;
+    font-weight: bold;
+    padding: 10px 28px;
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #405d9b;
+    border: 2px solid #405d9b;
+    padding: 9px 18px;
+}
+
+.btn-secondary:hover {
+    background-color: #eef1f8;
+}
+
+/* Color-coded guess/hint/success messages */
 .message {
-    margin: 10px 0;
+    margin: 14px 0 4px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    display: inline-block;
 }
 
 .message.error {
-    color: #d32f2f;
+    color: #b71c1c;
     font-weight: bold;
+    background-color: #fdecea;
+    animation: shake 0.3s ease;
 }
 
 .message.hint {
-    color: #2e7d32;
+    color: #1b5e20;
     font-weight: bold;
+    background-color: #eaf7ec;
 }
 
-/* Results page */
+.message.success {
+    color: #1b5e20;
+    font-weight: bold;
+    background-color: #eaf7ec;
+    animation: pop 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+@keyframes pop {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Results / completion screen */
+.result-card {
+    padding: 35px 25px;
+}
+
+.result-badge {
+    font-size: 3rem;
+    margin-bottom: 0.25rem;
+    animation: pop 0.35s ease;
+}
+
 .score {
     font-size: 1.2rem;
     font-weight: bold;
     color: #405d9b;
+}
+
+.answer-reveal {
+    font-size: 1.05rem;
+    color: #333;
+    margin: 0.5rem 0 1rem;
 }
 
 .title {
@@ -127,8 +389,164 @@ button:hover {
     border-radius: 5px;
     text-decoration: none;
     margin: 6px;
+    transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 .restart-button:hover {
     background-color: #304878;
+    transform: translateY(-1px);
+}
+
+.restart-button.secondary {
+    background-color: white;
+    color: #405d9b;
+    border: 2px solid #405d9b;
+}
+
+.restart-button.secondary:hover {
+    background-color: #eef1f8;
+}
+
+/* Home / landing page */
+.hero {
+    padding: 40px 25px;
+}
+
+.tagline {
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+.home-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Main-menu cards on the homepage */
+.menu-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 220px;
+    background-color: #f7f8fc;
+    border: 1px solid #e4e8f3;
+    border-radius: 10px;
+    padding: 16px 18px;
+    text-decoration: none;
+    text-align: left;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(64, 93, 155, 0.15);
+    border-color: #405d9b;
+}
+
+.menu-card.primary {
+    background-color: #405d9b;
+    border-color: #405d9b;
+}
+
+.menu-card.primary .menu-card-title,
+.menu-card.primary .menu-card-sub {
+    color: white;
+}
+
+.menu-card-title {
+    font-weight: bold;
+    color: #405d9b;
+    font-size: 1.05rem;
+}
+
+.menu-card-sub {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+/* How to Play page */
+.how-to-play {
+    text-align: left;
+}
+
+.how-to-play h1 {
+    text-align: center;
+}
+
+.htp-step {
+    margin-bottom: 1.25rem;
+}
+
+.htp-step h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.htp-step p {
+    color: #444;
+    margin: 0;
+}
+
+/* Browse-puzzles page */
+.puzzle-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.puzzle-list form {
+    margin: 0;
+}
+
+.puzzle-list button {
+    min-width: 160px;
+}
+
+.back-link {
+    margin-top: 1.5rem;
+}
+
+.back-link a {
+    color: #405d9b;
+}
+
+/* Responsive tweaks for smaller screens */
+@media (max-width: 480px) {
+    .container {
+        margin: 16px auto;
+        padding: 18px;
+    }
+
+    .site-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .clue-card img {
+        max-height: 120px;
+    }
+
+    .clue-text {
+        font-size: 1.6rem;
+    }
+
+    .menu-card {
+        width: 100%;
+    }
+
+    .guess-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .guess-buttons button {
+        width: 100%;
+    }
 }

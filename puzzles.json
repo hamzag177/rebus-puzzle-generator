@@ -214,5 +214,28 @@
       }
     ],
     "phrase": "moonlight"
+  },
+  {
+    "answer": "computer",
+    "clues": [
+      {
+        "image_prompt": "a classic black plastic hair comb resting on a flat surface",
+        "segment": "COMB",
+        "type": "concept",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_classic_black_plastic_hair_comb_resting_on_a_flat_surface.jpg"
+      },
+      {
+        "image_prompt": "a traditional wooden church pew bench",
+        "segment": "PEW",
+        "type": "concept",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_traditional_wooden_church_pew_bench.jpg"
+      },
+      {
+        "image_prompt": null,
+        "segment": "TER",
+        "type": "text"
+      }
+    ],
+    "phrase": "computer"
   }
 ]

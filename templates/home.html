@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>REBUS Puzzle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+
+    <div class="container hero fade-in">
+        <h1>REBUS Puzzle Generator</h1>
+        <p class="tagline">AI-assisted rebus puzzles -- decode the picture-and-word clues to guess the phrase.</p>
+
+        <div class="home-actions">
+            <a href="{{ url_for('play_puzzle') }}" class="menu-card primary">
+                <span class="menu-card-title">Play Daily Puzzle</span>
+                <span class="menu-card-sub">Today's featured puzzle</span>
+            </a>
+            <a href="{{ url_for('browse') }}" class="menu-card">
+                <span class="menu-card-title">Browse Puzzles</span>
+                <span class="menu-card-sub">Pick any puzzle, play at your own pace</span>
+            </a>
+            <a href="{{ url_for('how_to_play') }}" class="menu-card">
+                <span class="menu-card-title">How to Play</span>
+                <span class="menu-card-sub">New here? Learn the rules</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

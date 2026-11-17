@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>REBUS Puzzle -- How to Play</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+
+    <div class="container fade-in how-to-play">
+        <h1>How to Play</h1>
+
+        <div class="htp-step">
+            <h2>1. Read the clues</h2>
+            <p>Each puzzle shows a row of pictures and/or text pieces. Say each piece out loud, in order,
+               and the sounds blend together into a word or phrase. For example, a picture of an
+               <strong>eye</strong> next to the word <strong>CREAM</strong> sounds like "ice cream."</p>
+        </div>
+
+        <div class="htp-step">
+            <h2>2. Type your guess</h2>
+            <p>Type the full word or phrase you think the clues spell out into the text box and hit
+               <strong>Guess</strong>. You get 3 tries per puzzle.</p>
+        </div>
+
+        <div class="htp-step">
+            <h2>3. Use a hint if you're stuck</h2>
+            <p>Click <strong>Hint</strong> to see blanks showing the length of each word in the answer --
+               click it again and the first letter gets revealed too. You get up to 2 hints per puzzle,
+               and the button keeps track of how many you've used.</p>
+        </div>
+
+        <div class="htp-step">
+            <h2>4. Skip if you want</h2>
+            <p>Not feeling a puzzle? Click <strong>Skip</strong> to move on to the next one without being
+               marked wrong forever -- it just moves on without counting as a solve.</p>
+        </div>
+
+        <div class="htp-step">
+            <h2>5. Keep playing</h2>
+            <p>Solve the daily puzzle and you can keep going with the rest of the puzzle list, or head to
+               <strong>Browse Puzzles</strong> any time to jump straight into any individual puzzle.</p>
+        </div>
+
+        <div class="home-actions" style="margin-top: 1.5rem;">
+            <a href="{{ url_for('play_puzzle') }}" class="restart-button">Play Daily Puzzle</a>
+            <a href="{{ url_for('home') }}" class="restart-button secondary">Back to Main Menu</a>
+        </div>
+    </div>
+</body>
+</html>

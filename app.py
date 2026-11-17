@@ -42,7 +42,9 @@ def get_puzzles():
     # temporarily left out of this set so they don't see it again right
     # after solving it (just for this session; it's back in rotation
     # tomorrow, or anytime a fresh session starts).
-    if session.get("mode") == "all":
+    mode = session.get("mode")
+
+    if mode == "all":
         puzzles = answer_store.load_puzzles()
         excluded_answer = session.get("excluded_answer")
         if excluded_answer:
@@ -51,6 +53,19 @@ def get_puzzles():
                 if p["answer"].strip().lower() != excluded_answer.strip().lower()
             ]
         return puzzles
+
+    if mode == "single":
+        # Reached via the Browse page -- play exactly the one puzzle the
+        # player picked, nothing else.
+        single_answer = session.get("single_answer")
+        if not single_answer:
+            return []
+        all_puzzles = answer_store.load_puzzles()
+        return [
+            p for p in all_puzzles
+            if p["answer"].strip().lower() == single_answer.strip().lower()
+        ]
+
     return get_puzzle_of_the_day()
 
 def reset_game(mode="daily"):
@@ -65,6 +80,8 @@ def reset_game(mode="daily"):
         # Back to the daily flow -- clear any temporary exclusion from a
         # previous "all" play-through so it doesn't leak into the next one.
         session.pop("excluded_answer", None)
+    if mode != "single":
+        session.pop("single_answer", None)
 
 @app.route("/images/<path:filename>")
 def serve_image(filename):
@@ -72,7 +89,13 @@ def serve_image(filename):
     return send_from_directory(IMAGES_DIR, filename)
 
 @app.route("/")
-def index():
+def home():
+    """Landing page -- the first thing anyone sees when they open the site,
+    instead of dropping straight into a puzzle."""
+    return render_template("home.html")
+
+@app.route("/play")
+def play_puzzle():
     if "puzzle_index" not in session:
         reset_game()
 
@@ -100,6 +123,26 @@ def index():
         message_type=message_type,
     )
 
+@app.route("/how-to-play")
+def how_to_play():
+    """Simple static explainer page -- how rebus puzzles work and how to
+    use the Guess/Hint/Skip controls."""
+    return render_template("how_to_play.html")
+
+@app.route("/browse")
+def browse():
+    """Lets a player jump straight into any puzzle, instead of only being
+    reachable through the daily puzzle -> "Play More Puzzles" chain."""
+    puzzles = answer_store.load_puzzles()
+    return render_template("browse.html", puzzles=puzzles)
+
+@app.route("/browse/play", methods=["POST"])
+def play_selected():
+    answer = request.form.get("answer", "")
+    session["single_answer"] = answer
+    reset_game(mode="single")
+    return redirect(url_for("play_puzzle"))
+
 @app.route("/guess", methods=["POST"])
 def guess():
     puzzles = get_puzzles()
@@ -120,19 +163,20 @@ def guess():
             session["hint_count"] += 1
             hint_text = hints.give_hint(puzzle["answer"], session["hint_count"])
             session["message"], session["message_type"] = message_colors.hint_message(hint_text)
-        return redirect(url_for("index"))
+        return redirect(url_for("play_puzzle"))
 
     if action == "skip":
         _advance_puzzle(correct=False)
-        return redirect(url_for("index"))
+        return redirect(url_for("play_puzzle"))
 
     # Otherwise, it's a real guess.
     user_guess = request.form.get("guess", "")
 
     if answer_store.check_answer(user_guess, puzzle):
         session["correct_count"] += 1
+        session["message"], session["message_type"] = message_colors.correct_guess_message()
         _advance_puzzle(correct=True)
-        return redirect(url_for("index"))
+        return redirect(url_for("play_puzzle"))
 
     session["attempt"] += 1
     if session["attempt"] > MAX_TRIES:
@@ -145,7 +189,7 @@ def guess():
             "Not quite -- try again."
         )
 
-    return redirect(url_for("index"))
+    return redirect(url_for("play_puzzle"))
 
 def _advance_puzzle(correct):
     session["puzzle_index"] += 1
@@ -160,12 +204,31 @@ def results():
     title = score_summary.get_title(correct_count, total)
     mode = session.get("mode", "daily")
 
-    return render_template("result.html", correct_count=correct_count, total=total, title=title, mode=mode)
+    # Reaching results clears out any leftover "Correct!" flash so it
+    # doesn't resurface on an unrelated puzzle later.
+    session.pop("message", None)
+    session.pop("message_type", None)
+
+    # In daily/single mode there's exactly one puzzle -- show its answer on
+    # the completion screen. In "all" mode there were several, so there's no
+    # single answer to reveal.
+    puzzle_answer = None
+    if mode in ("daily", "single") and puzzles:
+        puzzle_answer = puzzles[0]["answer"]
+
+    return render_template(
+        "result.html",
+        correct_count=correct_count,
+        total=total,
+        title=title,
+        mode=mode,
+        puzzle_answer=puzzle_answer,
+    )
 
 @app.route("/restart")
 def restart():
     reset_game(mode="daily")
-    return redirect(url_for("index"))
+    return redirect(url_for("play_puzzle"))
 
 @app.route("/more")
 def more_puzzles():
@@ -179,7 +242,7 @@ def more_puzzles():
             session["excluded_answer"] = todays_puzzle[0]["answer"]
 
     reset_game(mode="all")
-    return redirect(url_for("index"))
+    return redirect(url_for("play_puzzle"))
 
 # ---------------------------------------------------------------------------
 # Admin page (Week 6) -- hidden from regular players, no login yet per the

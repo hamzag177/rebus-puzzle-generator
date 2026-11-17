@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>REBUS Puzzle -- Browse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include "_header.html" %}
+
+    <div class="container fade-in">
+        <h1>Browse Puzzles</h1>
+        <p class="progress">Pick any puzzle below and play it at your own pace.</p>
+
+        <ul class="puzzle-list">
+            {% for puzzle in puzzles %}
+                <li>
+                    <form method="post" action="{{ url_for('play_selected') }}">
+                        <input type="hidden" name="answer" value="{{ puzzle.answer }}">
+                        <button type="submit" class="btn-secondary">Puzzle #{{ loop.index }}</button>
+                    </form>
+                </li>
+            {% else %}
+                <li>No puzzles yet.</li>
+            {% endfor %}
+        </ul>
+
+        <p class="back-link"><a href="{{ url_for('home') }}">&larr; Back to Home</a></p>
+    </div>
+</body>
+</html>

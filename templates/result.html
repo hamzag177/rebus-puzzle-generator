@@ -2,27 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>REBUS Puzzle -- Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Done!</h1>
+    {% include "_header.html" %}
 
+    <div class="container fade-in result-card">
         {% if mode == "all" %}
+            <div class="result-badge">{{ '🏆' if correct_count == total and total > 0 else '🧩' }}</div>
+            <h1>Done!</h1>
             <p class="score">You solved {{ correct_count }} out of {{ total }} puzzles.</p>
             <p class="title">{{ title }}</p>
-            <a href="{{ url_for('restart') }}" class="restart-button">Back to Today's Puzzle</a>
+            <div class="home-actions">
+                <a href="{{ url_for('restart') }}" class="restart-button">Back to Today's Puzzle</a>
+                <a href="{{ url_for('home') }}" class="restart-button secondary">Main Menu</a>
+            </div>
+        {% elif mode == "single" %}
+            <div class="result-badge">{{ '🎉' if correct_count > 0 else '🧩' }}</div>
+            <h1>{{ 'Solved!' if correct_count > 0 else 'Done!' }}</h1>
+            {% if correct_count > 0 %}
+                <p class="score">You solved it!</p>
+            {% else %}
+                <p class="score">Better luck next time!</p>
+            {% endif %}
+            {% if puzzle_answer %}
+                <p class="answer-reveal">The answer was: <strong>{{ puzzle_answer }}</strong></p>
+            {% endif %}
+            <div class="home-actions">
+                <a href="{{ url_for('browse') }}" class="restart-button">Back to Browse</a>
+                <a href="{{ url_for('restart') }}" class="restart-button secondary">Play Today's Puzzle</a>
+                <a href="{{ url_for('home') }}" class="restart-button secondary">Main Menu</a>
+            </div>
         {% else %}
+            <div class="result-badge">{{ '🎉' if correct_count > 0 else '🧩' }}</div>
+            <h1>{{ 'Solved!' if correct_count > 0 else 'Done!' }}</h1>
             {% if correct_count > 0 %}
                 <p class="score">You solved today's puzzle!</p>
             {% else %}
                 <p class="score">Better luck tomorrow!</p>
             {% endif %}
+            {% if puzzle_answer %}
+                <p class="answer-reveal">The answer was: <strong>{{ puzzle_answer }}</strong></p>
+            {% endif %}
             <p class="title">{{ title }}</p>
             <p>Come back tomorrow for a brand new daily puzzle -- or keep playing now.</p>
-            <a href="{{ url_for('more_puzzles') }}" class="restart-button">Play More Puzzles</a>
-            <a href="{{ url_for('restart') }}" class="restart-button">Play Again</a>
+            <div class="home-actions">
+                <a href="{{ url_for('more_puzzles') }}" class="restart-button">Play More Puzzles</a>
+                <a href="{{ url_for('restart') }}" class="restart-button secondary">Play Again</a>
+                <a href="{{ url_for('home') }}" class="restart-button secondary">Main Menu</a>
+            </div>
         {% endif %}
     </div>
 </body>
