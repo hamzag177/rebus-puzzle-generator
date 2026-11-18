@@ -10,6 +10,7 @@
     {% include "_header.html" %}
 
     <div class="container fade-in">
+        <div class="score-badge">Score: {{ score }}</div>
         <h1>REBUS Puzzle Generator</h1>
         {% if mode == "all" %}
             <p class="progress">Puzzle {{ puzzle_number }} of {{ total_puzzles }}</p>
@@ -43,12 +44,13 @@
 
         <form method="post" action="{{ url_for('guess') }}" class="guess-form" id="guess-form">
             <input type="text" name="guess" placeholder="Type your guess..." autofocus autocomplete="off">
+            <input type="hidden" name="action" id="action-input" value="">
             <div class="guess-buttons">
-                <button type="submit" name="action" value="guess" id="guess-btn" class="btn-primary">Guess</button>
-                <button type="submit" name="action" value="hint" id="hint-btn" class="btn-secondary">
+                <button type="button" data-action="guess" id="guess-btn" class="btn-primary">Guess</button>
+                <button type="button" data-action="hint" id="hint-btn" class="btn-secondary">
                     Hint ({{ hint_count }}/{{ max_hints }} used)
                 </button>
-                <button type="submit" name="action" value="skip" id="skip-btn" class="btn-secondary">Skip</button>
+                <button type="button" data-action="skip" id="skip-btn" class="btn-secondary">Skip</button>
             </div>
         </form>
 
@@ -62,16 +64,31 @@
 
     <script>
         var guessForm = document.getElementById("guess-form");
-        if (guessForm) {
-            guessForm.addEventListener("submit", function (e) {
-                var buttons = guessForm.querySelectorAll("button");
-                var clicked = e.submitter;
-                buttons.forEach(function (b) { b.disabled = true; });
-                if (clicked) {
-                    if (clicked.id === "guess-btn") clicked.textContent = "Checking...";
-                    else if (clicked.id === "hint-btn") clicked.textContent = "Getting hint...";
-                    else if (clicked.id === "skip-btn") clicked.textContent = "Skipping...";
-                }
+        var actionInput = document.getElementById("action-input");
+        var loadingText = {
+            "guess-btn": "Checking...",
+            "hint-btn": "Getting hint...",
+            "skip-btn": "Skipping..."
+        };
+
+        if (guessForm && actionInput) {
+            guessForm.querySelectorAll(".guess-buttons button").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    // Record which action was chosen in the hidden field BEFORE
+                    // disabling anything -- a disabled button's own name/value
+                    // never gets submitted, which was silently turning every
+                    // Hint/Skip click into a blank guess.
+                    actionInput.value = btn.dataset.action;
+
+                    guessForm.querySelectorAll("button").forEach(function (b) {
+                        b.disabled = true;
+                    });
+                    if (loadingText[btn.id]) {
+                        btn.textContent = loadingText[btn.id];
+                    }
+
+                    guessForm.submit();
+                });
             });
         }
     </script>

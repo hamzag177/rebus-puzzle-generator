@@ -375,6 +375,29 @@ button:disabled {
     margin: 0.5rem 0 1rem;
 }
 
+/* Live score shown at the top of the puzzle page during gameplay */
+.score-badge {
+    display: inline-block;
+    background-color: #eef1f8;
+    color: #405d9b;
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+}
+
+/* Total score shown on the completion / results screens */
+.total-score {
+    display: inline-block;
+    background-color: #405d9b;
+    color: white;
+    font-weight: bold;
+    padding: 8px 18px;
+    border-radius: 8px;
+    margin: 0.5rem 0 1rem;
+}
+
 .title {
     font-style: italic;
     color: #555;

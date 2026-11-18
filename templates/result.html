@@ -15,6 +15,7 @@
             <h1>Done!</h1>
             <p class="score">You solved {{ correct_count }} out of {{ total }} puzzles.</p>
             <p class="title">{{ title }}</p>
+            <p class="total-score">Total Score: {{ score }} points</p>
             <div class="home-actions">
                 <a href="{{ url_for('restart') }}" class="restart-button">Back to Today's Puzzle</a>
                 <a href="{{ url_for('home') }}" class="restart-button secondary">Main Menu</a>
@@ -30,6 +31,7 @@
             {% if puzzle_answer %}
                 <p class="answer-reveal">The answer was: <strong>{{ puzzle_answer }}</strong></p>
             {% endif %}
+            <p class="total-score">Total Score: {{ score }} points</p>
             <div class="home-actions">
                 <a href="{{ url_for('browse') }}" class="restart-button">Back to Browse</a>
                 <a href="{{ url_for('restart') }}" class="restart-button secondary">Play Today's Puzzle</a>
@@ -47,6 +49,7 @@
                 <p class="answer-reveal">The answer was: <strong>{{ puzzle_answer }}</strong></p>
             {% endif %}
             <p class="title">{{ title }}</p>
+            <p class="total-score">Total Score: {{ score }} points</p>
             <p>Come back tomorrow for a brand new daily puzzle -- or keep playing now.</p>
             <div class="home-actions">
                 <a href="{{ url_for('more_puzzles') }}" class="restart-button">Play More Puzzles</a>

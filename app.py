@@ -12,6 +12,7 @@ import hints
 import image_generator
 import message_colors
 import score_summary
+import scoring
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # new random key every time the server starts, so old sessions reset automatically
@@ -20,6 +21,14 @@ IMAGES_DIR = os.path.join(os.path.dirname(__file__), "images")
 
 MAX_TRIES = 3
 MAX_HINTS = 2
+
+@app.before_request
+def ensure_score():
+    # A running point total for this browser session -- starts at 0 the
+    # first time someone shows up, and only ever goes up from there (it
+    # isn't reset by reset_game(), so it keeps accumulating across the
+    # daily puzzle, "Play More Puzzles," and anything picked from Browse).
+    session.setdefault("score", 0)
 
 def get_puzzle_of_the_day():
     """
@@ -121,6 +130,7 @@ def play_puzzle():
         max_hints=MAX_HINTS,
         message=message,
         message_type=message_type,
+        score=session["score"],
     )
 
 @app.route("/how-to-play")
@@ -173,8 +183,10 @@ def guess():
     user_guess = request.form.get("guess", "")
 
     if answer_store.check_answer(user_guess, puzzle):
+        points = scoring.calculate_points(session["attempt"], session["hint_count"])
+        session["score"] += points
         session["correct_count"] += 1
-        session["message"], session["message_type"] = message_colors.correct_guess_message()
+        session["message"], session["message_type"] = message_colors.correct_guess_message(points)
         _advance_puzzle(correct=True)
         return redirect(url_for("play_puzzle"))
 
@@ -223,6 +235,7 @@ def results():
         title=title,
         mode=mode,
         puzzle_answer=puzzle_answer,
+        score=session["score"],
     )
 
 @app.route("/restart")
