@@ -11,12 +11,11 @@
 
     <div class="container fade-in">
         <div class="score-badge">Score: {{ score }}</div>
-        <h1>REBUS Puzzle Generator</h1>
-        {% if mode == "all" %}
+        {% if mode == "all" or mode == "single" %}
+            <h1>REBUS Puzzle Generator</h1>
             <p class="progress">Puzzle {{ puzzle_number }} of {{ total_puzzles }}</p>
-        {% elif mode == "single" %}
-            <p class="progress">Puzzle from the Browse list</p>
         {% else %}
+            <h1>Puzzle of the Day</h1>
             <p class="progress">Today's Puzzle</p>
         {% endif %}
 

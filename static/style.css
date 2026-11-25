@@ -49,92 +49,18 @@ body {
     text-decoration: underline;
 }
 
-/* "Main Menu" dropdown -- clicking it goes to the homepage, hovering it
-   reveals the Daily Puzzle / Browse Puzzles / How to Play links. */
-.nav-dropdown {
-    position: relative;
+/* The Admin link is visually set apart from the player-facing nav links,
+   since it leads to a passcode-gated page rather than part of the game. */
+.nav-admin {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+    padding: 3px 12px !important;
 }
 
-.nav-menu-trigger {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 0;
-}
-
-.nav-caret {
-    font-size: 0.7rem;
-}
-
-.nav-dropdown-content {
-    display: none;
-    position: absolute;
-    /* No gap between the trigger and this box (no margin-top) -- a gap
-       would be dead space the mouse has to cross on the way down, which
-       drops the :hover state before you can reach the links. */
-    top: 100%;
-    right: 0;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    min-width: 170px;
-    overflow: hidden;
-    z-index: 20;
-}
-
-.nav-dropdown:hover .nav-dropdown-content,
-.nav-dropdown:focus-within .nav-dropdown-content {
-    display: block;
-}
-
-.nav-dropdown-content a {
-    display: block;
-    padding: 10px 16px;
-    color: #405d9b;
-    text-decoration: none;
-    font-size: 0.9rem;
-    white-space: nowrap;
-}
-
-.nav-dropdown-content a:hover {
-    background-color: #eef1f8;
-    text-decoration: none;
-}
-
-/* Touch devices can't "hover" -- just show the menu links inline instead
-   of hiding them behind a dropdown that nothing will ever open. */
-@media (hover: none) {
-    .nav-dropdown {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        flex-wrap: wrap;
-    }
-
-    .nav-dropdown-content {
-        display: flex;
-        gap: 18px;
-        flex-wrap: wrap;
-        position: static;
-        box-shadow: none;
-        background: transparent;
-        margin-top: 0;
-        min-width: 0;
-    }
-
-    .nav-dropdown-content a {
-        color: #dde4f7;
-        padding: 0;
-        font-size: 0.95rem;
-    }
-
-    .nav-dropdown-content a:hover {
-        background: transparent;
-    }
-
-    .nav-caret {
-        display: none;
-    }
+.nav-admin:hover {
+    border-color: white;
+    text-decoration: none !important;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .container {

@@ -14,6 +14,11 @@ import message_colors
 import score_summary
 import scoring
 
+try:
+    from config_local import ADMIN_PASSCODE
+except ImportError:
+    ADMIN_PASSCODE = None
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # new random key every time the server starts, so old sessions reset automatically
 
@@ -64,16 +69,20 @@ def get_puzzles():
         return puzzles
 
     if mode == "single":
-        # Reached via the Browse page -- play exactly the one puzzle the
-        # player picked, nothing else.
+        # Reached via the Browse page -- start at whichever puzzle the
+        # player picked, then keep going through the rest of the puzzle
+        # list in order (wrapping back around) until every puzzle has
+        # been played once.
         single_answer = session.get("single_answer")
-        if not single_answer:
-            return []
         all_puzzles = answer_store.load_puzzles()
-        return [
-            p for p in all_puzzles
-            if p["answer"].strip().lower() == single_answer.strip().lower()
-        ]
+        if not single_answer or not all_puzzles:
+            return []
+        start_index = next(
+            (i for i, p in enumerate(all_puzzles)
+             if p["answer"].strip().lower() == single_answer.strip().lower()),
+            0,
+        )
+        return all_puzzles[start_index:] + all_puzzles[:start_index]
 
     return get_puzzle_of_the_day()
 
@@ -221,11 +230,11 @@ def results():
     session.pop("message", None)
     session.pop("message_type", None)
 
-    # In daily/single mode there's exactly one puzzle -- show its answer on
-    # the completion screen. In "all" mode there were several, so there's no
-    # single answer to reveal.
+    # In daily mode there's exactly one puzzle -- show its answer on the
+    # completion screen. In "all"/"single" mode there were several, so
+    # there's no single answer to reveal.
     puzzle_answer = None
-    if mode in ("daily", "single") and puzzles:
+    if mode == "daily" and puzzles:
         puzzle_answer = puzzles[0]["answer"]
 
     return render_template(
@@ -258,15 +267,33 @@ def more_puzzles():
     return redirect(url_for("play_puzzle"))
 
 # ---------------------------------------------------------------------------
-# Admin page (Week 6) -- hidden from regular players, no login yet per the
-# instructor's note that auth "will come later". Lets us type in any new
-# word/phrase, have the AI break it into clues, generate the images for
-# the "concept" clues, and save the whole thing as a new playable puzzle --
-# without touching any code.
+# Admin page -- lets us type in any new word/phrase, have the AI break it
+# into clues, generate the images for the "concept" clues, and save the
+# whole thing as a new playable puzzle without touching any code. Gated by
+# a passcode (set in config_local.py) so regular players can't wander in.
 # ---------------------------------------------------------------------------
+
+@app.route("/admin-login", methods=["GET", "POST"])
+def admin_login():
+    error = None
+    if request.method == "POST":
+        entered = request.form.get("passcode", "")
+        if ADMIN_PASSCODE and entered == ADMIN_PASSCODE:
+            session["is_admin"] = True
+            return redirect(url_for("admin"))
+        error = "Incorrect passcode."
+    return render_template("admin_login.html", error=error)
+
+@app.route("/admin-logout")
+def admin_logout():
+    session.pop("is_admin", None)
+    return redirect(url_for("home"))
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
+    if not session.get("is_admin"):
+        return redirect(url_for("admin_login"))
+
     message = None
     draft = session.get("draft_puzzle")
 

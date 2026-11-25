@@ -93,7 +93,11 @@
             {% endfor %}
         </ul>
 
-        <p style="margin-top: 2rem;"><a href="{{ url_for('home') }}">&larr; Back to the game</a></p>
+        <p style="margin-top: 2rem;">
+            <a href="{{ url_for('home') }}">&larr; Back to the game</a>
+            &nbsp;&middot;&nbsp;
+            <a href="{{ url_for('admin_logout') }}">Log out of admin</a>
+        </p>
     </div>
 
     <script>

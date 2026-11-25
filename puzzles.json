@@ -1,23 +1,5 @@
 [
   {
-    "phrase": "understand",
-    "answer": "understand",
-    "clues": [
-      {
-        "segment": "UNDER",
-        "type": "concept",
-        "image_prompt": "an arrow pointing straight down, under a line",
-        "image_path": "/Users/hamza/rebus-puzzle-generator/images/an_arrow_pointing_straight_down_under_a_line.jpg"
-      },
-      {
-        "segment": "STAND",
-        "type": "concept",
-        "image_prompt": "a person standing upright",
-        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_person_standing_upright.jpg"
-      }
-    ]
-  },
-  {
     "phrase": "believe",
     "answer": "believe",
     "clues": [
@@ -237,5 +219,41 @@
       }
     ],
     "phrase": "computer"
+  },
+  {
+    "answer": "iphone",
+    "clues": [
+      {
+        "image_prompt": "A detailed close-up shot of a human eye looking straight ahead",
+        "segment": "EYE",
+        "type": "concept",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_detailed_close_up_shot_of_a_human_eye_looking_straight_ahe.jpg"
+      },
+      {
+        "image_prompt": "A classic vintage rotary telephone sitting on a wooden table",
+        "segment": "PHONE",
+        "type": "concept",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_classic_vintage_rotary_telephone_sitting_on_a_wooden_table.jpg"
+      }
+    ],
+    "phrase": "iphone"
+  },
+  {
+    "answer": "fishtank",
+    "clues": [
+      {
+        "image_prompt": "A colorful tropical goldfish swimming in clear water, side view",
+        "segment": "FISH",
+        "type": "concept",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_colorful_tropical_goldfish_swimming_in_clear_water_side_vi.jpg"
+      },
+      {
+        "image_prompt": "A heavy military armored tank vehicle with tracks and a turret",
+        "segment": "TANK",
+        "type": "concept",
+        "image_path": "/Users/hamza/rebus-puzzle-generator/images/a_heavy_military_armored_tank_vehicle_with_tracks_and_a_turr.jpg"
+      }
+    ],
+    "phrase": "fishtank"
   }
 ]

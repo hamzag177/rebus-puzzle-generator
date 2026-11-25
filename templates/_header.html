@@ -1,13 +1,10 @@
 <header class="site-header">
     <a href="{{ url_for('home') }}" class="site-logo">REBUS</a>
     <nav class="site-nav">
-        <div class="nav-dropdown">
-            <a href="{{ url_for('home') }}" class="nav-menu-trigger">Main Menu <span class="nav-caret">&#9662;</span></a>
-            <div class="nav-dropdown-content">
-                <a href="{{ url_for('restart') }}">Daily Puzzle</a>
-                <a href="{{ url_for('browse') }}">Browse Puzzles</a>
-                <a href="{{ url_for('how_to_play') }}">How to Play</a>
-            </div>
-        </div>
+        <a href="{{ url_for('home') }}">Main Menu</a>
+        <a href="{{ url_for('restart') }}">Daily Puzzle</a>
+        <a href="{{ url_for('browse') }}">Browse Puzzles</a>
+        <a href="{{ url_for('how_to_play') }}">How to Play</a>
+        <a href="{{ url_for('admin') }}" class="nav-admin">Admin</a>
     </nav>
 </header>

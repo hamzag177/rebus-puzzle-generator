@@ -21,16 +21,10 @@
                 <a href="{{ url_for('home') }}" class="restart-button secondary">Main Menu</a>
             </div>
         {% elif mode == "single" %}
-            <div class="result-badge">{{ '🎉' if correct_count > 0 else '🧩' }}</div>
-            <h1>{{ 'Solved!' if correct_count > 0 else 'Done!' }}</h1>
-            {% if correct_count > 0 %}
-                <p class="score">You solved it!</p>
-            {% else %}
-                <p class="score">Better luck next time!</p>
-            {% endif %}
-            {% if puzzle_answer %}
-                <p class="answer-reveal">The answer was: <strong>{{ puzzle_answer }}</strong></p>
-            {% endif %}
+            <div class="result-badge">{{ '🏆' if correct_count == total and total > 0 else '🧩' }}</div>
+            <h1>Done!</h1>
+            <p class="score">You solved {{ correct_count }} out of {{ total }} puzzles.</p>
+            <p class="title">{{ title }}</p>
             <p class="total-score">Total Score: {{ score }} points</p>
             <div class="home-actions">
                 <a href="{{ url_for('browse') }}" class="restart-button">Back to Browse</a>
